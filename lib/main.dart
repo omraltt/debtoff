@@ -15,6 +15,7 @@ void main() async {
   
   // Initialize Hive database
   await DatabaseService.init();
+  await DatabaseService.clearProfileOnce();
 
   // Initialize date formatting locales
   await initializeDateFormatting('tr_TR', null);

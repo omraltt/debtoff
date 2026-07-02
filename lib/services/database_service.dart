@@ -13,6 +13,15 @@ class DatabaseService {
     await Hive.initFlutter();
   }
 
+  // Clear profile only once to force onboarding screen on next run
+  static Future<void> clearProfileOnce() async {
+    final box = await Hive.openBox(_profileBoxName);
+    if (box.get('forced_reset_v2') != true) {
+      await box.delete('user_profile');
+      await box.put('forced_reset_v2', true);
+    }
+  }
+
   // Retrieve user profile
   static Future<UserProfile?> getProfile() async {
     final box = await Hive.openBox(_profileBoxName);
