@@ -1,0 +1,23 @@
+# Jekyll configuration to exclude non-static files and prevent build failures
+exclude:
+  - android
+  - ios
+  - lib
+  - test
+  - web
+  - windows
+  - macos
+  - linux
+  - build
+  - .dart_tool
+  - .idea
+  - .git
+  - .github
+  - .metadata
+  - .flutter-plugins-dependencies
+  - .gitignore
+  - pubspec.yaml
+  - pubspec.lock
+  - debtoff.iml
+  - flutter_launcher_icons.yaml
+  - README.md
