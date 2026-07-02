@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debtoff — Privacy Policy & Terms of Use</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #080815;
+            --card-bg: #12122a;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --accent: #3b82f6;
+            --gold: #eab308;
+            --border: #2a2a55;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            border-radius: 20px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin: 0;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .lang-switch {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .lang-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .lang-section {
+            display: none;
+        }
+
+        .lang-section.active {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--gold);
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent);
+            padding-left: 15px;
+        }
+
+        p, li {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo-placeholder">D</div>
+        <h1>Debtoff</h1>
+        <div class="subtitle">Gizlilik Politikası & Kullanım Şartları / Privacy Policy & Terms of Use</div>
+    </header>
+
+    <div class="lang-switch">
+        <button class="lang-btn active" onclick="switchLang('tr')">Türkçe</button>
+        <button class="lang-btn" onclick="switchLang('en')">English</button>
+    </div>
+
+    <!-- TÜRKÇE İÇERİK -->
+    <div id="section-tr" class="lang-section active">
+        <div class="card">
+            <h2>1. Veri Gizliliği ve Depolama</h2>
+            <p>Debtoff uygulaması, kullanıcı gizliliğini en üst düzeyde tutmak amacıyla <strong>çevrimdışı öncelikli (offline-first)</strong> olarak tasarlanmıştır. Uygulama içinde girdiğiniz borç miktarları, ödeme planları, banka isimleri ve şifre kodları dahil hiçbir veri harici bir sunucuya gönderilmez veya depolanmaz.</p>
+            <p>Tüm verileriniz yalnızca kendi cihazınızda şifreli yerel veritabanında (Hive) barındırılır. Uygulamayı sildiğinizde cihazdaki tüm verileriniz de otomatik olarak silinir.</p>
+        </div>
+
+        <div class="card">
+            <h2>2. Kullanıcı Verilerinin Toplanması</h2>
+            <p>Uygulamamız kişisel olarak tanımlanabilir hiçbir bilgiyi (ad, e-posta, telefon numarası, konum veya cihaz kimliği) <strong>toplamaz, işlemez ve üçüncü şahıslarla paylaşmaz</strong>.</p>
+        </div>
+
+        <div class="card">
+            <h2>3. Uygulama İçi Satın Almalar</h2>
+            <p>Premium üyelik satın alımları tamamen Apple App Store altyapısı ve güvenlik protokolleri (StoreKit) aracılığıyla gerçekleştirilir. Ödeme bilgileriniz doğrudan Apple tarafından işlenir; geliştiricinin ödeme kartı veya fatura bilgilerinize erişimi yoktur.</p>
+        </div>
+
+        <div class="card">
+            <h2>4. İletişim</h2>
+            <p>Sorularınız veya geri bildirimleriniz için bizimle iletişime geçebilirsiniz:</p>
+            <p>E-posta: <a href="mailto:support@debtoff.com">support@debtoff.com</a></p>
+        </div>
+    </div>
+
+    <!-- ENGLISH CONTENT -->
+    <div id="section-en" class="lang-section">
+        <div class="card">
+            <h2>1. Data Privacy & Storage</h2>
+            <p>Debtoff is designed as an <strong>offline-first</strong> application to prioritize user privacy. No personal financial data, debt details, bank names, or PIN codes enter our servers or external networks.</p>
+            <p>All records are stored locally on your device within a secured database (Hive). Deleting the application will automatically clear all local storage.</p>
+        </div>
+
+        <div class="card">
+            <h2>2. Information Collection</h2>
+            <p>We do <strong>not collect, share, or store</strong> any personally identifiable information (such as name, email, phone number, location, or device ID).</p>
+        </div>
+
+        <div class="card">
+            <h2>3. In-App Purchases</h2>
+            <p>Premium upgrades are processed exclusively via Apple App Store services (StoreKit). Your payment details are secured and managed directly by Apple. The developer has no access to your banking or credit card credentials.</p>
+        </div>
+
+        <div class="card">
+            <h2>4. Contact</h2>
+            <p>For support and inquiries, please reach out to:</p>
+            <p>Email: <a href="mailto:support@debtoff.com">support@debtoff.com</a></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Debtoff. All rights reserved.</p>
+    </footer>
+</div>
+
+<script>
+    function switchLang(lang) {
+        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.lang-section').forEach(sec => sec.classList.remove('active'));
+
+        if (lang === 'tr') {
+            document.querySelector('button[onclick="switchLang(\'tr\')"]').classList.add('active');
+            document.getElementById('section-tr').classList.add('active');
+        } else {
+            document.querySelector('button[onclick="switchLang(\'en\')"]').classList.add('active');
+            document.getElementById('section-en').classList.add('active');
+        }
+    }
+</script>
+</body>
+</html>
