@@ -41,11 +41,77 @@ class _DashboardTabState extends State<DashboardTab> {
         // Get dynamic tasks based on user debts
         final tasks = provider.getChecklistForMonth(_activeMonth);
 
+        final lossData = provider.calculatePreviousMonthLoss();
+
         return SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              if (lossData['hasLoss'] == true) ...[
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xffef4444).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: const Color(0xffef4444).withOpacity(0.3)),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                          color: Color(0xffef4444),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              provider.translate('interest_loss_warning'),
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xffef4444),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              provider.translate('loss_calculator_msg')
+                                  .replaceAll('{month}', lossData['monthName'] as String)
+                                  .replaceAll('{amount}', (lossData['interestLoss'] as double).toStringAsFixed(0))
+                                  .replaceAll('{curr}', currency),
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                color: const Color(0xfffca5a5),
+                                height: 1.4,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '${provider.languageCode == 'tr' ? 'Gecikmeye Düşenler' : 'Missed Accounts'}: ${((lossData['debtNames'] as List<String>).join(', '))}',
+                              style: GoogleFonts.inter(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xfff87171),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               // Summary Cards Grid
               TweenAnimationBuilder<double>(
                 tween: Tween<double>(begin: 0.0, end: 1.0),

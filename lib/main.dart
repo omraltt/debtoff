@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         builder: (context, provider, _) {
           PurchaseService().initialize(provider);
           return MaterialApp(
-            title: 'Debtoff',
+            title: 'Sıfırla',
             debugShowCheckedModeBanner: false,
             locale: Locale(provider.languageCode),
             builder: (context, child) {

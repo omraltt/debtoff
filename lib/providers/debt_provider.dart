@@ -2,17 +2,20 @@ import 'package:flutter/foundation.dart';
 import '../models/debt.dart';
 import '../models/payment_log.dart';
 import '../models/profile.dart';
+import '../models/expense_log.dart';
 import '../services/database_service.dart';
 import '../services/localization_service.dart';
 
 class DebtProvider extends ChangeNotifier {
   List<Debt> _debts = [];
   List<PaymentLog> _journal = [];
+  List<ExpenseLog> _expenses = [];
   UserProfile? _profile;
   bool _isLoading = false;
 
   List<Debt> get debts => _debts;
   List<PaymentLog> get journal => _journal;
+  List<ExpenseLog> get expenses => _expenses;
   UserProfile? get profile => _profile;
   bool get isLoading => _isLoading;
 
@@ -71,6 +74,7 @@ class DebtProvider extends ChangeNotifier {
     try {
       _debts = await DatabaseService.getDebts();
       _journal = await DatabaseService.getJournal();
+      _expenses = await DatabaseService.getExpenses();
       _profile = await DatabaseService.getProfile();
     } catch (e) {
       debugPrint('Error loading data: $e');
@@ -133,6 +137,111 @@ class DebtProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  // Add Expense
+  Future<void> addExpense(ExpenseLog expense) async {
+    await DatabaseService.saveExpense(expense);
+    _expenses.insert(0, expense);
+
+    // Auto-update debt current balance
+    final debtIndex = _debts.indexWhere((d) => d.id == expense.debtId);
+    if (debtIndex != -1) {
+      final updatedDebt = _debts[debtIndex].copyWith(
+        current: _debts[debtIndex].current + expense.amount,
+      );
+      _debts[debtIndex] = updatedDebt;
+      await DatabaseService.saveDebts([updatedDebt]);
+    }
+    notifyListeners();
+  }
+
+  // Delete Expense
+  Future<void> deleteExpense(String id) async {
+    final expenseIndex = _expenses.indexWhere((e) => e.id == id);
+    if (expenseIndex != -1) {
+      final expense = _expenses[expenseIndex];
+      await DatabaseService.deleteExpense(id);
+      _expenses.removeAt(expenseIndex);
+
+      // Auto-update debt current balance
+      final debtIndex = _debts.indexWhere((d) => d.id == expense.debtId);
+      if (debtIndex != -1) {
+        final updatedDebt = _debts[debtIndex].copyWith(
+          current: (_debts[debtIndex].current - expense.amount).clamp(0.0, double.infinity),
+        );
+        _debts[debtIndex] = updatedDebt;
+        await DatabaseService.saveDebts([updatedDebt]);
+      }
+      notifyListeners();
+    }
+  }
+
+  // Calculate dynamic interest loss for previous month missed minimum payments
+  Map<String, dynamic> calculatePreviousMonthLoss() {
+    final now = DateTime.now();
+    // Previous month calculation
+    final prevMonth = now.month == 1 ? 12 : now.month - 1;
+    final prevYear = now.month == 1 ? now.year - 1 : now.year;
+    
+    double totalMissedAmount = 0.0;
+    double totalInterestLoss = 0.0;
+    List<String> missedDebtsNames = [];
+
+    for (final debt in _debts) {
+      final minPayment = debt.minPayment;
+      if (minPayment <= 0) continue;
+
+      // Sum all payments in the previous month
+      final prevMonthPayments = _journal.where((log) {
+        return log.debtId == debt.id &&
+            log.action == 'payment' &&
+            log.date.month == prevMonth &&
+            log.date.year == prevYear;
+      }).fold(0.0, (sum, log) => sum + log.amount);
+
+      if (prevMonthPayments < minPayment) {
+        final missed = minPayment - prevMonthPayments;
+        // Interest loss based on monthly interest rate of the card/overdraft
+        final loss = missed * (debt.rate / 100);
+        
+        totalMissedAmount += missed;
+        totalInterestLoss += loss;
+        missedDebtsNames.add(debt.bank + ' ' + debt.type);
+      }
+    }
+
+    final String monthName = prevMonth == 1 
+        ? (languageCode == 'tr' ? 'Ocak' : 'January')
+        : prevMonth == 2
+            ? (languageCode == 'tr' ? 'Şubat' : 'February')
+            : prevMonth == 3
+                ? (languageCode == 'tr' ? 'Mart' : 'March')
+                : prevMonth == 4
+                    ? (languageCode == 'tr' ? 'Nisan' : 'April')
+                    : prevMonth == 5
+                        ? (languageCode == 'tr' ? 'Mayıs' : 'May')
+                        : prevMonth == 6
+                            ? (languageCode == 'tr' ? 'Haziran' : 'June')
+                            : prevMonth == 7
+                                ? (languageCode == 'tr' ? 'Temmuz' : 'July')
+                                : prevMonth == 8
+                                    ? (languageCode == 'tr' ? 'Ağustos' : 'August')
+                                    : prevMonth == 9
+                                        ? (languageCode == 'tr' ? 'Eylül' : 'September')
+                                        : prevMonth == 10
+                                            ? (languageCode == 'tr' ? 'Ekim' : 'October')
+                                            : prevMonth == 11
+                                                ? (languageCode == 'tr' ? 'Kasım' : 'November')
+                                                : (languageCode == 'tr' ? 'Aralık' : 'December');
+
+    return {
+      'hasLoss': totalInterestLoss > 0,
+      'missedAmount': totalMissedAmount,
+      'interestLoss': totalInterestLoss,
+      'debtNames': missedDebtsNames,
+      'monthName': monthName,
+    };
   }
 
   // Generate dynamic checklist based on actual user debts

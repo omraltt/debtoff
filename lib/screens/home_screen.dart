@@ -10,6 +10,7 @@ import '../tabs/dashboard_tab.dart';
 import '../tabs/debts_tab.dart';
 import '../tabs/ai_splitter_tab.dart';
 import '../tabs/journal_tab.dart';
+import '../tabs/expenses_tab.dart';
 import '../widgets/confetti_overlay.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const DashboardTab(),
     const DebtsTab(),
     const AiSplitterTab(),
+    const ExpensesTab(),
     const JournalTab(),
   ];
 
@@ -46,8 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
         final profile = provider.profile;
         final nameLabel = profile != null ? ' - ${profile.name}' : '';
         final titles = provider.languageCode == 'tr'
-            ? ['Özet Paneli', 'Borçlarım', 'AI Dağıtıcı', 'Geçmiş']
-            : ['Overview', 'My Debts', 'AI Splitter', 'History'];
+            ? ['Özet Paneli', 'Borçlarım', 'AI Dağıtıcı', 'Harcamalarım', 'Geçmiş']
+            : ['Overview', 'My Debts', 'AI Splitter', 'Expenses', 'History'];
 
         return Scaffold(
           backgroundColor: const Color(0xff080815),
@@ -76,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  provider.isPremium ? 'DEBTOFF PRO' : 'DEBTOFF',
+                  provider.isPremium ? 'SIFIRLA PRO' : 'SIFIRLA',
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
@@ -154,9 +156,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: provider.languageCode == 'tr' ? 'AI Dağıtıcı' : 'AI Splitter',
                 ),
                 BottomNavigationBarItem(
+                  icon: const Icon(Icons.receipt_long_outlined),
+                  activeIcon: const Icon(Icons.receipt_long),
+                  label: provider.translate('expenses'),
+                ),
+                BottomNavigationBarItem(
                   icon: const Icon(Icons.history_outlined),
                   activeIcon: const Icon(Icons.history),
-                  label: provider.languageCode == 'tr' ? 'Günlük' : 'History',
+                  label: provider.languageCode == 'tr' ? 'Geçmiş' : 'History',
                 ),
               ],
             ),

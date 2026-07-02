@@ -3,11 +3,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../models/debt.dart';
 import '../models/payment_log.dart';
 import '../models/profile.dart';
+import '../models/expense_log.dart';
 
 class DatabaseService {
   static const String _debtsBoxName = 'debts_box';
   static const String _journalBoxName = 'journal_box';
   static const String _profileBoxName = 'profile_box';
+  static const String _expensesBoxName = 'expenses_box';
 
   static Future<void> init() async {
     await Hive.initFlutter();
@@ -187,6 +189,32 @@ class DatabaseService {
 
     final profileBox = await Hive.openBox(_profileBoxName);
     await profileBox.clear();
+
+    final expensesBox = await Hive.openBox(_expensesBoxName);
+    await expensesBox.clear();
+  }
+
+  // Retrieve expenses
+  static Future<List<ExpenseLog>> getExpenses() async {
+    final box = await Hive.openBox(_expensesBoxName);
+    final list = box.values
+        .map((value) => ExpenseLog.fromMap(value as Map<dynamic, dynamic>))
+        .toList();
+    // Sort with most recent expenses first
+    list.sort((a, b) => b.date.compareTo(a.date));
+    return list;
+  }
+
+  // Save/add single expense
+  static Future<void> saveExpense(ExpenseLog expense) async {
+    final box = await Hive.openBox(_expensesBoxName);
+    await box.put(expense.id, expense.toMap());
+  }
+
+  // Delete single expense
+  static Future<void> deleteExpense(String id) async {
+    final box = await Hive.openBox(_expensesBoxName);
+    await box.delete(id);
   }
 
   // Retrieve journal payment logs
@@ -217,11 +245,15 @@ class DatabaseService {
     final debtsBox = await Hive.openBox(_debtsBoxName);
     final journalBox = await Hive.openBox(_journalBoxName);
     final profileBox = await Hive.openBox(_profileBoxName);
+    final expensesBox = await Hive.openBox(_expensesBoxName);
 
     final List<Map<String, dynamic>> debtsList = debtsBox.values
         .map((e) => Map<String, dynamic>.from(e as Map))
         .toList();
     final List<Map<String, dynamic>> journalList = journalBox.values
+        .map((e) => Map<String, dynamic>.from(e as Map))
+        .toList();
+    final List<Map<String, dynamic>> expensesList = expensesBox.values
         .map((e) => Map<String, dynamic>.from(e as Map))
         .toList();
     
@@ -233,6 +265,7 @@ class DatabaseService {
     final data = {
       'debts': debtsList,
       'journal': journalList,
+      'expenses': expensesList,
       'profile': profileMap,
       'exportedAt': DateTime.now().toIso8601String(),
     };
@@ -247,10 +280,12 @@ class DatabaseService {
     final debtsBox = await Hive.openBox(_debtsBoxName);
     final journalBox = await Hive.openBox(_journalBoxName);
     final profileBox = await Hive.openBox(_profileBoxName);
+    final expensesBox = await Hive.openBox(_expensesBoxName);
 
     await debtsBox.clear();
     await journalBox.clear();
     await profileBox.clear();
+    await expensesBox.clear();
 
     if (data.containsKey('debts')) {
       final List debts = data['debts'] as List;
@@ -265,6 +300,14 @@ class DatabaseService {
       for (final j in journal) {
         final map = Map<String, dynamic>.from(j as Map);
         await journalBox.put(map['id'], map);
+      }
+    }
+
+    if (data.containsKey('expenses')) {
+      final List expenses = data['expenses'] as List;
+      for (final e in expenses) {
+        final map = Map<String, dynamic>.from(e as Map);
+        await expensesBox.put(map['id'], map);
       }
     }
 

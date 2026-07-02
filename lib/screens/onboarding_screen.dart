@@ -151,7 +151,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        'DEBTOFF',
+                        'SIFIRLA',
                         style: GoogleFonts.inter(
                           fontSize: 22,
                           fontWeight: FontWeight.w900,
